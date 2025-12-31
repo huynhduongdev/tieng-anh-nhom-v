@@ -783,7 +783,13 @@
             goPrev();
         }
     });
-
+document.addEventListener('click', (e) => {
+        // Nếu click vào nút full screen hoặc các nút điều hướng hoặc quiz option -> không làm gì
+        if (e.target.closest('button') || e.target.closest('.quiz-opt')) return;
+        
+        // Còn lại click vào màn hình -> Next
+        goNext();
+    });
   
 </script>
   
