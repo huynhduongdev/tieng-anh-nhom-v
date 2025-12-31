@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerund & Infinitive Presentation</title>
+    <!-- Font chữ đẹp từ Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;600;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #2D3436;
+            --accent-color: #6C5CE7; /* Tím Canva */
+            --accent-pink: #FD79A8; /* Hồng Pastel */
+            --bg-gradient: linear-gradient(120deg, #a1c4fd 0%, #c2e9fb 100%);
+            --glass-bg: rgba(255, 255, 255, 0.85);
+            --glass-border: 1px solid rgba(255, 255, 255, 0.5);
+            --shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Be Vietnam Pro', sans-serif;
+            background-image: url('https://images.unsplash.com/photo-1557683316-973673baf926?q=80&w=2029&auto=format&fit=crop'); 
+            background-size: cover;
+            background-position: center;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--primary-color);
+        }
+
+        /* Lớp phủ mờ để làm nền tối đi một chút */
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            z-index: -1;
+        }
+
+        /* Khung Slide chính */
+        #presentation-container {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Slide Styles */
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            padding: 60px 100px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transform: scale(1.1);
+            transition: all 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+
+        .slide.active {
+            opacity: 1;
+            visibility: visible;
+            transform: scale(1);
+            z-index: 10;
+        }
+
+        /* Hiệu ứng nền kính cho nội dung */
+        .content-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(8px);
+            border: var(--glass-border);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: var(--shadow);
+            max-width: 1400px;
+            width: 100%;
+            margin: 0 auto;
+            max-height: 90vh;
+            overflow-y: auto; /* Cho phép cuộn nếu nội dung quá dài */
+        }
+
+        /* Typography */
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 4.5rem;
+            background: -webkit-linear-gradient(45deg, #6C5CE7, #FD79A8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 20px;
+            line-height: 1.2;
+        }
+
+        h2 {
+            font-size: 2.5rem;
+            color: var(--accent-color);
+            margin-bottom: 30px;
+            border-bottom: 3px solid var(--accent-pink);
+            display: inline-block;
+            padding-bottom: 5px;
+        }
+
+        h3 {
+            font-size: 1.6rem;
+            color: #d63031;
+            margin-top: 20px;
+            margin-bottom: 15px;
+        }
+
+        p, li {
+            font-size: 1.3rem;
+            line-height: 1.6;
+            margin-bottom: 12px;
+            color: #2d3436;
+        }
+
+        ul, ol { margin-left: 30px; }
+        
+        .highlight {
+            color: var(--accent-color);
+            font-weight: 700;
+            background: rgba(108, 92, 231, 0.1);
+            padding: 0 5px;
+            border-radius: 4px;
+        }
+
+        /* ANIMATION "STEP" (Hiệu ứng xuất hiện từng dòng) */
+        .step {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s ease-out;
+        }
+
+        .step.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Layout Grid */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+        }
+
+        .grid-5 {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 20px;
+            margin-top: 40px;
+        }
+
+        /* Member Card (Slide 2) */
+        .member-card {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+        .member-card:hover { transform: translateY(-10px); }
+        .avatar {
+            width: 80px;
+            height: 80px;
+            background: #dfe6e9;
+            border-radius: 50%;
+            margin: 0 auto 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+        }
+
+        /* Verb Tags */
+        .verb-tag {
+            display: inline-block;
+            background: var(--accent-color);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            margin: 5px;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        /* Quiz Styles */
+        .quiz-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .quiz-opt {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            border: 2px solid #eee;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+        }
+        .quiz-opt:hover { border-color: var(--accent-color); background: #f8f9fa; }
+        .quiz-opt.correct { background: #00b894; color: white; border-color: #00b894; }
+        .quiz-opt.wrong { background: #ff7675; color: white; border-color: #ff7675; }
+        .circle-opt {
+            width: 30px; height: 30px; border-radius: 50%; border: 2px solid #ccc;
+            margin-right: 15px; display: flex; justify-content: center; align-items: center;
+        }
+
+        /* Controls */
+        .controls {
+            position: fixed;
+            bottom: 20px;
+            right: 30px;
+            z-index: 100;
+            display: flex;
+            gap: 10px;
+        }
+        .btn-nav {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            width: 40px; height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            opacity: 0.5;
+            transition: 0.3s;
+        }
+        .btn-nav:hover { opacity: 1; transform: scale(1.1); }
+        
+        #fullscreen-btn {
+            position: fixed;
+            top: 20px; right: 20px;
+            padding: 10px 20px;
+            background: rgba(0,0,0,0.6);
+            color: white;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            z-index: 200;
+            font-weight: 600;
+            backdrop-filter: blur(5px);
+        }
+
+        /* Slide Counter */
+        .slide-number {
+            position: fixed;
+            bottom: 20px;
+            left: 30px;
+            font-weight: bold;
+            color: var(--primary-color);
+            font-size: 1.2rem;
+        }
+        .progress {
+            position: fixed;
+            bottom: 0; left: 0;
+            height: 5px;
+            background: var(--accent-pink);
+            transition: width 0.3s;
+        }
+
+    </style>
+</head>
+<body>
+
+    <button id="fullscreen-btn" onclick="toggleFullScreen()">⛶ Full Screen</button>
+
+    <div id="presentation-container">
+        
+        <!-- SLIDE 1: TRANG BÌA (KHÔNG HIỆU ỨNG STEP) -->
+        <div class="slide active">
+            <div class="content-card" style="text-align: center; border: none; background: rgba(255,255,255,0.9);">
+                <h3 style="color: var(--primary-color); font-weight: 300; letter-spacing: 5px; margin-bottom: 0;">ENGLISH GRAMMAR</h3>
+                <h1 style="font-size: 5rem; margin: 20px 0;">GERUND & INFINITIVE</h1>
+                <p style="font-size: 1.8rem; color: #636e72;">Danh Động Từ & Động Từ Nguyên Thể</p>
+                <div style="margin-top: 50px;">
+                    <p>Nhấn <strong>Space</strong> hoặc <strong>&rarr;</strong> để bắt đầu</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 2: THÀNH VIÊN NHÓM -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>Thành Viên Nhóm</h2>
+                <p class="step">Danh sách 5 thành viên thực hiện dự án:</p>
+                <div class="grid-5">
+                    <div class="member-card step">
+                        <div class="avatar">👩‍🎓</div>
+                        <h4>Thành Viên 1</h4>
+                        <p style="font-size: 0.9rem;">Leader</p>
+                    </div>
+                    <div class="member-card step">
+                        <div class="avatar">👨‍🎓</div>
+                        <h4>Thành Viên 2</h4>
+                        <p style="font-size: 0.9rem;">Member</p>
+                    </div>
+                    <div class="member-card step">
+                        <div class="avatar">👩‍💻</div>
+                        <h4>Thành Viên 3</h4>
+                        <p style="font-size: 0.9rem;">Content</p>
+                    </div>
+                    <div class="member-card step">
+                        <div class="avatar">👨‍💻</div>
+                        <h4>Thành Viên 4</h4>
+                        <p style="font-size: 0.9rem;">Design</p>
+                    </div>
+                    <div class="member-card step">
+                        <div class="avatar">🙋</div>
+                        <h4>Thành Viên 5</h4>
+                        <p style="font-size: 0.9rem;">Presenter</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 3: DANH ĐỘNG TỪ (ĐỊNH NGHĨA) -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>I. Danh Động Từ (Gerund)</h2>
+                <div class="step">
+                    <h3>1. Khái niệm</h3>
+                    <p>Danh động từ (Gerund) là hình thức <strong>V-ing</strong> của động từ nhưng đóng vai trò như một <strong>danh từ</strong> trong câu.</p>
+                </div>
+                <div class="step">
+                    <h3>2. Cấu Trúc: V + ing</h3>
+                    <div style="background: #f1f2f6; padding: 20px; border-radius: 10px;">
+                        <ul style="list-style: none;">
+                            <li class="step">🔹 read → <strong>reading</strong></li>
+                            <li class="step">🔹 swim → <strong>swimming</strong> (gấp đôi phụ âm cuối)</li>
+                            <li class="step">🔹 write → <strong>writing</strong> (bỏ 'e' cuối)</li>
+                            <li class="step">🔹 stop → <strong>stopping</strong></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 4: CÁCH DÙNG GERUND (1) -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>3. Cách Dùng Danh Động Từ</h2>
+                <div class="grid-2">
+                    <div class="step">
+                        <h3>A. Làm Chủ ngữ (Subject)</h3>
+                        <p>Đứng đầu câu, động từ theo sau chia số ít.</p>
+                        <p class="highlight">V-ing + is/was + ...</p>
+                        <ul>
+                            <li class="step"><em>Reading</em> is a great way to acquire knowledge.</li>
+                            <li class="step"><em>Eating</em> too much fast food is unhealthy.</li>
+                        </ul>
+                    </div>
+                    <div class="step">
+                        <h3>B. Làm Tân ngữ (Object)</h3>
+                        <p>Theo sau một số động từ cố định.</p>
+                        <p class="highlight">S + V + V-ing</p>
+                        <ul>
+                            <li class="step">I enjoy <em>watching</em> old movies.</li>
+                            <li class="step">She finished <em>writing</em> her report.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 5: TỪ ĐI VỚI GERUND -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>📌 Động từ theo sau là Gerund (V-ing)</h2>
+                <p class="step">Các động từ này <strong>bắt buộc</strong> phải dùng với V-ing:</p>
+                <div class="step" style="margin-top: 30px;">
+                    <span class="verb-tag">admit</span>
+                    <span class="verb-tag">avoid</span>
+                    <span class="verb-tag">consider</span>
+                    <span class="verb-tag">deny</span>
+                    <span class="verb-tag">discuss</span>
+                    <span class="verb-tag">enjoy</span>
+                    <span class="verb-tag">finish</span>
+                    <span class="verb-tag">keep</span>
+                    <span class="verb-tag">mind</span>
+                    <span class="verb-tag">miss</span>
+                    <span class="verb-tag">practice</span>
+                    <span class="verb-tag">suggest</span>
+                    <span class="verb-tag">postpone</span>
+                </div>
+                <div class="step" style="margin-top: 30px;">
+                    <h3>C. Gerund sau Giới từ (Luôn đúng ❗)</h3>
+                    <p class="highlight">Preposition + V-ing</p>
+                    <p>Các giới từ: <em>in, on, at, about, for, without, by, of...</em></p>
+                    <p>Example: <em>Thank you <strong>for</strong> helping me.</em></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 6: CỤM TỪ CỐ ĐỊNH (SPECIAL) -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>4. Cụm Từ & Cấu Trúc Cố Định (V-ing)</h2>
+                <p class="step">⚠️ Lưu ý: "To" ở đây là giới từ, nên động từ phải thêm -ing.</p>
+                <ul style="margin-top: 20px;">
+                    <li class="step">➤ <strong>look forward to:</strong> mong đợi <br> <em>(I'm looking forward to meeting you)</em></li>
+                    <li class="step">➤ <strong>be used to / get used to:</strong> quen với việc gì</li>
+                    <li class="step">➤ <strong>can't help / can't stand:</strong> không thể nhịn / không thể chịu đựng</li>
+                    <li class="step">➤ <strong>be worth:</strong> đáng để làm gì <br> <em>(This book is worth reading)</em></li>
+                    <li class="step">➤ <strong>be busy:</strong> bận rộn</li>
+                    <li class="step">➤ <strong>spend time / money + V-ing:</strong> dành thời gian/tiền làm gì</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- SLIDE 7: INFINITIVE -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>II. Động Từ Nguyên Thể (Infinitive)</h2>
+                <div class="grid-2">
+                    <div class="step" style="background: rgba(255,255,255,0.6); padding: 20px; border-radius: 10px;">
+                        <h3 style="text-align: center; color: var(--accent-color);">TO-INFINITIVE</h3>
+                        <p style="text-align: center;">(to + V)</p>
+                        <hr>
+                        <ul style="margin-top: 15px;">
+                            <li class="step"><strong>1. Chỉ mục đích:</strong> <br> I go to school <em>to learn</em>.</li>
+                            <li class="step"><strong>2. Sau động từ mong muốn/tương lai:</strong> <br> want, hope, decide, plan, promise... <br> <em>I hope to see you.</em></li>
+                            <li class="step"><strong>3. Sau Tính từ (Adj + to-V):</strong> <br> <em>It's nice to meet you.</em></li>
+                            <li class="step"><strong>4. Sau từ để hỏi (Wh-questions):</strong> <br> <em>I don't know what to do.</em></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="step" style="background: rgba(255,255,255,0.6); padding: 20px; border-radius: 10px;">
+                        <h3 style="text-align: center; color: #e17055;">BARE-INFINITIVE</h3>
+                        <p style="text-align: center;">(V nguyên thể)</p>
+                        <hr>
+                        <ul style="margin-top: 15px;">
+                            <li class="step"><strong>1. Sau Modal Verbs:</strong> <br> can, must, should, will... <br> <em>I can swim.</em></li>
+                            <li class="step"><strong>2. Cấu trúc Bắt buộc/Cho phép:</strong> <br> Let / Make + O + V <br> <em>Let him go.</em></li>
+                            <li class="step"><strong>3. Lời khuyên đặc biệt:</strong> <br> Had better / Would rather <br> <em>You had better stay home.</em></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 8: CÁC TRƯỜNG HỢP ĐẶC BIỆT -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>V. Các Trường Hợp Đặc Biệt ❗</h2>
+                <p class="step">Một số động từ đi được với cả V-ing và To-V nhưng <strong>nghĩa khác nhau</strong>.</p>
+                
+                <div class="step" style="margin-bottom: 20px;">
+                    <h3>1. Remember / Forget / Regret</h3>
+                    <p>🔹 <strong>+ V-ing:</strong> Nhớ/Quên/Tiếc việc <strong>đã xảy ra</strong> trong quá khứ.<br>
+                    <em>Ex: I remember meeting him at the party. (Nhớ là đã gặp)</em></p>
+                    <p>🔹 <strong>+ To-V:</strong> Nhớ/Quên/Tiếc việc <strong>phải làm</strong> (nhiệm vụ).<br>
+                    <em>Ex: Remember to lock the door. (Nhớ phải khóa cửa)</em></p>
+                </div>
+
+                <div class="step">
+                    <h3>2. Stop</h3>
+                    <p>🔹 <strong>Stop V-ing:</strong> Dừng hẳn việc đang làm.<br>
+                    <em>Ex: He stopped smoking. (Bỏ thuốc)</em></p>
+                    <p>🔹 <strong>Stop To-V:</strong> Dừng lại để làm việc khác.<br>
+                    <em>Ex: He stopped to smoke. (Dừng xe lại để hút thuốc)</em></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 9: TÓM TẮT -->
+        <div class="slide">
+            <div class="content-card">
+                <h2 style="text-align: center; display: block;">VII. Tóm Tắt Nhanh</h2>
+                <div class="grid-2">
+                    <div class="step" style="background: #e8f0fe; padding: 30px; border-radius: 15px;">
+                        <h3 style="color: var(--accent-color); text-align: center;">GERUND (V-ing)</h3>
+                        <ul>
+                            <li>Làm Chủ ngữ / Tân ngữ</li>
+                            <li>Sau Giới từ (in, on, at, for...)</li>
+                            <li>Sau: enjoy, avoid, mind, suggest...</li>
+                            <li>Look forward to, be used to...</li>
+                        </ul>
+                    </div>
+                    <div class="step" style="background: #fce4ec; padding: 30px; border-radius: 15px;">
+                        <h3 style="color: var(--accent-pink); text-align: center;">INFINITIVE (To-V / V)</h3>
+                        <ul>
+                            <li><strong>To-V:</strong> Chỉ mục đích</li>
+                            <li>Sau: want, hope, decide, plan...</li>
+                            <li>Sau Tính từ</li>
+                            <li><strong>V-bare:</strong> Sau Can, Could, Will...</li>
+                            <li>Sau Make, Let</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 10: QUIZ INTRO -->
+        <div class="slide">
+             <div class="content-card" style="text-align: center; background: #2d3436; color: white;">
+                <h1 style="color: #00cec9;">MINI QUIZ</h1>
+                <p class="step" style="color: #dfe6e9;">4 câu hỏi trắc nghiệm kiểm tra kiến thức.</p>
+                <div class="step" style="margin-top: 30px; font-size: 5rem;">🎮</div>
+            </div>
+        </div>
+
+        <!-- QUIZ 1 -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>Câu hỏi 1</h2>
+                <div class="step" style="background: #f1f2f6; padding: 30px; border-radius: 10px; text-align: center; margin-bottom: 20px;">
+                    <p style="font-size: 2rem; font-weight: bold;">_______ is a great way to relax.</p>
+                </div>
+                <div class="quiz-container step">
+                    <div class="quiz-opt" onclick="checkAnswer(this, false)"><div class="circle-opt">A</div> Read</div>
+                    <div class="quiz-opt" onclick="checkAnswer(this, true)"><div class="circle-opt">B</div> Reading</div>
+                    <div class="quiz-opt" onclick="checkAnswer(this, false)"><div class="circle-opt">C</div> To read</div>
+                    <div class="quiz-opt" onclick="checkAnswer(this, false)"><div class="circle-opt">D</div> Reads</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- QUIZ 2 -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>Câu hỏi 2</h2>
+                <div class="step" style="background: #f1f2f6; padding: 30px; border-radius: 10px; text-align: center; margin-bottom: 20px;">
+                    <p style="font-size: 2rem; font-weight: bold;">We <strong>decided</strong> _______ to the beach.</p>
+                </div>
+                <div class="quiz-container step">
+                    <div class="quiz-opt" onclick="checkAnswer(this, false)"><div class="circle-opt">A</div> go</div>
+                    <div class="quiz-opt" onclick="checkAnswer(this, false)"><div class="circle-opt">B</div> going</div>
+                    <div class="quiz-opt" onclick="checkAnswer(this, true)"><div class="circle-opt">C</div> to go</div>
+                    <div class="quiz-opt" onclick="checkAnswer(this, false)"><div class="circle-opt">D</div> went</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- QUIZ 3 -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>Câu hỏi 3</h2>
+                <div class="step" style="background: #f1f2f6; padding: 30px; border-radius: 10px; text-align: center; margin-bottom: 20px;">
+                    <p style="font-size: 2rem; font-weight: bold;">He is interested <strong>in</strong> _______ history.</p>
+                </div>
+                <div class="quiz-container step">
+                    <div class="quiz-opt" onclick="checkAnswer(this, true)"><div class="circle-opt">A</div> learning</div>
+                    <div class="quiz-opt" onclick="checkAnswer(this, false)"><div class="circle-opt">B</div> to learn</div>
+                    <div class="quiz-opt" onclick="checkAnswer(this, false)"><div class="circle-opt">C</div> learn</div>
+                    <div class="quiz-opt" onclick="checkAnswer(this, false)"><div class="circle-opt">D</div> learned</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- QUIZ 4 -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>Câu hỏi 4</h2>
+                <div class="step" style="background: #f1f2f6; padding: 30px; border-radius: 10px; text-align: center; margin-bottom: 20px;">
+                    <p style="font-size: 2rem; font-weight: bold;">The teacher <strong>made</strong> us _______ the exercise.</p>
+                </div>
+                <div class="quiz-container step">
+                    <div class="quiz-opt" onclick="checkAnswer(this, false)"><div class="circle-opt">A</div> to do</div>
+                    <div class="quiz-opt" onclick="checkAnswer(this, false)"><div class="circle-opt">B</div> doing</div>
+                    <div class="quiz-opt" onclick="checkAnswer(this, true)"><div class="circle-opt">C</div> do</div>
+                    <div class="quiz-opt" onclick="checkAnswer(this, false)"><div class="circle-opt">D</div> done</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE END -->
+        <div class="slide">
+            <div class="content-card" style="text-align: center; border:none; background: rgba(255,255,255,0.9);">
+                <h1 class="step">Thank You!</h1>
+                <p class="step">Cảm ơn thầy cô và các bạn đã lắng nghe.</p>
+                <div class="step" style="margin-top: 40px;">
+                    <button onclick="location.reload()" style="padding: 15px 30px; font-size: 1.2rem; background: var(--accent-color); color: white; border: none; border-radius: 50px; cursor: pointer;">Làm lại bài giảng</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- NAVIGATION UI -->
+        <div class="progress" id="progress-bar"></div>
+        <div class="slide-number"><span id="curr-slide">1</span> / <span id="total-slides"></span></div>
+        <div class="controls">
+            <button class="btn-nav" onclick="prevStep()">❮</button>
+            <button class="btn-nav" onclick="nextStep()">❯</button>
+        </div>
+
+    </div>
+
+    <script>
+        // --- LOGIC CHUYỂN ĐỘNG & ĐIỀU HƯỚNG ---
+        
+        let currentSlideIndex = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+        
+        // Cập nhật số trang
+        document.getElementById('total-slides').innerText = totalSlides;
+        
+        // Khởi tạo trạng thái ban đầu
+        function init() {
+            updateSlideView();
+        }
+
+        // Hàm xử lý "Next" (Bấm Enter/Space/Next)
+        function nextStep() {
+            const currentSlide = slides[currentSlideIndex];
+            // Tìm các thành phần 'step' chưa hiện trong slide này
+            const hiddenSteps = currentSlide.querySelectorAll('.step:not(.visible)');
+
+            if (hiddenSteps.length > 0) {
+                // Nếu còn thành phần chưa hiện -> Hiện cái tiếp theo
+                hiddenSteps[0].classList.add('visible');
+                // Tự động cuộn xuống nếu nội dung dài
+                hiddenSteps[0].scrollIntoView({behavior: "smooth", block: "center"});
+            } else {
+                // Nếu đã hiện hết -> Chuyển sang slide tiếp theo
+                if (currentSlideIndex < totalSlides - 1) {
+                    currentSlideIndex++;
+                    updateSlideView();
+                }
+            }
+        }
+
+        // Hàm xử lý "Prev" (Bấm Back/Left)
+        function prevStep() {
+            const currentSlide = slides[currentSlideIndex];
+            const visibleSteps = currentSlide.querySelectorAll('.step.visible');
+
+            if (visibleSteps.length > 0) {
+                // Nếu có thành phần đang hiện -> Ẩn cái cuối cùng đi
+                visibleSteps[visibleSteps.length - 1].classList.remove('visible');
+            } else {
+                // Nếu không còn gì để ẩn -> Lùi về slide trước
+                if (currentSlideIndex > 0) {
+                    currentSlideIndex--;
+                    updateSlideView();
+                }
+            }
+        }
+
+        function updateSlideView() {
+            // Xóa class active ở tất cả slide
+            slides.forEach((slide, index) => {
+                slide.classList.remove('active');
+                if (index === currentSlideIndex) {
+                    slide.classList.add('active');
+                }
+            });
+
+            // Update số trang
+            document.getElementById('curr-slide').innerText = currentSlideIndex + 1;
+            
+            // Update thanh tiến trình
+            const progressPercent = ((currentSlideIndex + 1) / totalSlides) * 100;
+            document.getElementById('progress-bar').style.width = progressPercent + "%";
+        }
+
+        // --- QUIZ LOGIC ---
+        function checkAnswer(element, isCorrect) {
+            const parent = element.parentElement;
+            
+            // Ngăn chọn lại
+            if (parent.classList.contains('answered')) return;
+            parent.classList.add('answered');
+
+            if (isCorrect) {
+                element.classList.add('correct');
+            } else {
+                element.classList.add('wrong');
+                // Hiện đáp án đúng
+                const siblings = parent.children;
+                for (let sib of siblings) {
+                    if (sib.getAttribute('onclick').includes('true')) {
+                        setTimeout(() => sib.classList.add('correct'), 200);
+                    }
+                }
+            }
+        }
+
+        // --- FULL SCREEN ---
+        function toggleFullScreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen();
+                document.getElementById('fullscreen-btn').style.display = 'none';
+            }
+        }
+
+        // --- EVENT LISTENERS ---
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ' || e.key === 'ArrowRight' || e.key === 'PageDown') {
+                e.preventDefault();
+                nextStep();
+            } else if (e.key === 'ArrowLeft' || e.key === 'Backspace' || e.key === 'PageUp') {
+                e.preventDefault();
+                prevStep();
+            }
+        });
+
+        // Click chuột trái để next (trừ khi click vào nút hoặc quiz)
+        document.addEventListener('click', (e) => {
+            if (e.target.closest('button') || e.target.closest('.quiz-opt')) return;
+            nextStep();
+        });
+
+        // Chạy khởi tạo
+        init();
+
+    </script>
+</body>
+</html>
